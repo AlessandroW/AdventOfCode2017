@@ -8,7 +8,6 @@
 --     1234 produces 0 because no digit matches the next.
 --     91212129 produces 9 because the only digit that matches the next one is the last digit, 9.
 
-
 -- Convert an Integer to a List of digits
 toDigits:: Integer -> [Integer]
 toDigits x = if div x 10 == 0 then (mod x 10) : []
@@ -43,3 +42,18 @@ sumList list = if (length list) > 1 then (list !! 0) + (sumList (tail list))
 -- Solves the given captcha
 solveCaptcha :: Integer -> Integer
 solveCaptcha n = sumList(removeSingles(toDigits(n)))
+
+-- Returns the next length/2 th elemnt
+getNextElement :: [Integer]-> Int -> Integer
+getNextElement list n = list !! (mod (n + (div (length list) 2)) (length list))
+
+evaluateElement :: [Integer]-> Int -> Integer
+evaluateElement list n = if (list !! n) == (getNextElement list n) then (list !! n)
+                         else 0
+  
+evaluateList :: [Integer]-> Int -> [Integer]
+evaluateList input n = if ((length input) == 0 || (length input) == n) then []
+                      else (evaluateElement input n) : (evaluateList input (n+1))
+
+solveSecondPuzzle :: Integer -> Integer
+solveSecondPuzzle number = sum(evaluateList (toDigits number) 0)
